@@ -1,37 +1,36 @@
 import React, { Component } from 'react';
 import Proptypes from 'prop-types';
+import Loading from './Loading';
 
 import api from '../utils/api';
 
 function SelectLanguage(props) {
-    let languages = ['All', 'Javascript', 'Ruby', 'Java', 'CSS', 'Python'];
-    return(
+    const languages = ['All', 'Javascript', 'Ruby', 'Java', 'CSS', 'Python'];
+    return (
             <ul className="languages">
-                {languages.map((lang)=>{
-                    return(
+                {languages.map((lang) => (
                     <li 
                     style={lang === props.selectedLanguage ? { color: '#d0021b' } : null}
                     onClick={props.onSelect.bind(null, lang)}
-                    key={lang}>
+                    key={lang}
+                    >
                         {lang}
                     </li>
-                    )
-                })}
+                    ))}
             </ul>
-        )
+        );
 }
 
 SelectLanguage.proptypes = {
     selectedLanguage: Proptypes.string.isRequired,
     onSelect: Proptypes.func.isRequired
-}
+};
 
 
 function RepoGrid(props) {
-    return(
+    return (
         <ul className='popular-list'>
-            {props.repos.map((repo,index) => {
-                return(
+            {props.repos.map((repo, index) => (
                     <li key={repo.name} className="popular-item">
                         <div className="popular-rank">#{index + 1}</div>
                         <ul className="space-list-item">
@@ -47,17 +46,16 @@ function RepoGrid(props) {
                             <li>{repo.stargazers_count} stars</li>
                         </ul>
                     </li>
-                )
-            })}
+                ))}
         </ul>
-    )
+    );
 }
 
 RepoGrid.proptypes = {
     repos: Proptypes.array.isRequired
-}
-class Popular extends Component{
-    constructor(props){
+};
+class Popular extends Component {
+    constructor(props) {
         super(props);
         this.state = {
             selectedLanguage: 'All',
@@ -67,41 +65,37 @@ class Popular extends Component{
         this.updateLanguage = this.updateLanguage.bind(this);
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.updateLanguage(this.state.selectedLanguage);
     }
 
-    updateLanguage(lang){
-        this.setState(function () {
-            return {
+    updateLanguage(lang) {
+        this.setState(() => ({
                 selectedLanguage: lang,
                 repos: null
-            }
-        });
+            }));
 
         api.fetchPopularRepos(lang)
             .then((repos) => {
-                this.setState(()=>{
-                    return{
-                        repos: repos
-                    }
-                })
-            })
+                this.setState(() => ({
+                        repos
+                    }));
+            });
     }
-    render(){
-        return(
+    render() {
+        return (
             <div>
                 <SelectLanguage
-                    selectedLanguage = {this.state.selectedLanguage}
-                    onSelect = {this.updateLanguage}
+                    selectedLanguage={this.state.selectedLanguage}
+                    onSelect={this.updateLanguage}
                 />
                 
                 {!this.state.repos
-                    ? <p>LOADING</p>
-                    : <RepoGrid repos={this.state.repos}/>
+                    ? <Loading />
+                    : <RepoGrid repos={this.state.repos} />
                 }
             </div>
-        )
+        );
     }
 }
 
