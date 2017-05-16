@@ -12,3 +12,6 @@ To run the project:
 * **Webpack**
 * **Babel**
 * **Axios**
+* **Firebase Hosting**
+
+#### Project Link: [Github Battle](https://react-fundamentals-6d222.firebaseapp.com/ "React Fundamentals Github Battle")
